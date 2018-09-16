@@ -13,15 +13,23 @@ from gutenberg.cleanup import strip_headers
 
 #it's a good idea to run this in interactive mode with the functional code commented out to test your lists are the same length
 
-book_numbers = [1245, 9830, 160, 1837, 284, 215, 11526, 205, 7370, 3420, 33, 84, 98, 1342]
+# book_numbers_2 = [7370, 3420, 33, 84, 98, 1342, 205, 11526, 215, 284, 1837, 160, 9830, 1245]
 
-author_names = ['VirginiaWoolf', 'FScottFitzgerald', 'KateChopin',
-                'MarkTwain', 'EdithWharton', 'JackLondon',
-                'MargaretFuller', 'HenryDavidThoreau', 'JohnLocke', 'MaryWollstonecraft', 'NathanielHawthorne', 'MaryShelley', 'CharlesDickens', 'JaneAustin']
+book_numbers = [10616, 134, 77, 18247, 1400, 161, 1022, 8642, 1056, 541, 86, 23810, 805, 144]
 
-book_names = ['NightandDay', 'TheBeautifulandDamned', 'TheAwakening', 'ThePrinceAndThePauper',
-                'TheHouseOfMirth', 'TheCallOfTheWildAndWhiteFang', 'SummerOnTheLakes',
-                'WaldenAndOnTheDutyOfCivilDisobedience', 'TwoTreatisesOnGovernment', 'VindicationRightsOfWomen', 'TheScarletLetter', 'Frankenstein', 'ATaleOfTwoCities', 'PrideAndPrejudice']
+author_names = ['JohnLocke', 'MaryWollstonecraft', 'NathanielHawthorne', 'MaryShelley', 'CharlesDickens', 'JaneAustin', 'HenryDavidThoreau', 'MargaretFuller', 'JackLondon', 'EdithWharton', 'MarkTwain', 'KateChopin', 'FScottFitzgerald', 'VirginiaWoolf']
+
+book_names = ['LettersHumanUnderstanding', 'MariaWrongWomen',
+'TheHouseSevenGables', 'TheLastMan', 'GreatExpectations',
+'SenseAndSensibility', 'Walking', 'WomanInNineteenthCentury',
+'MartinEden', 'TheAgeOfInnocence', 'ConnecticutYankee', 'AtFault',
+'ThisSideOfParadise', 'TheVoyageOut']
+
+#these are out of order
+
+# book_names_2 = ['NightandDay', 'TheBeautifulandDamned', 'TheAwakening', 'ThePrinceAndThePauper',
+#                 'TheHouseOfMirth', 'TheCallOfTheWildAndWhiteFang', 'SummerOnTheLakes',
+#                 'WaldenAndOnTheDutyOfCivilDisobedience', 'TwoTreatisesOnGovernment', 'VindicationRightsOfWomen', 'TheScarletLetter', 'Frankenstein', 'ATaleOfTwoCities', 'PrideAndPrejudice']
 
 
 
@@ -31,7 +39,7 @@ book_names = ['NightandDay', 'TheBeautifulandDamned', 'TheAwakening', 'ThePrince
 for i in range(len(author_names)):
 
     #get desired book for each author, write to file, wait random number of seconds to avoid suspicion
-    fhand = open('{}-{}-{}'.format(i, author_names[i], book_names[i]), 'w+')
+    fhand = open('{}-{}-{}'.format((i+14), author_names[i], book_names[i]), 'w+')
     text = strip_headers(load_etext(book_numbers[i])).strip()
     fhand.write(text)
     fhand.close()
