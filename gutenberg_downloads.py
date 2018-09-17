@@ -10,7 +10,6 @@ from gutenberg.cleanup import strip_headers
 # cache = get_metadata_cache()
 # cache.populate()
 
-
 #it's a good idea to run this in interactive mode with the functional code commented out to test your lists are the same length
 
 # book_numbers_2 = [7370, 3420, 33, 84, 98, 1342, 205, 11526, 215, 284, 1837, 160, 9830, 1245]

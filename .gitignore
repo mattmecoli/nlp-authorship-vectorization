@@ -1,0 +1,7 @@
+
+stanford_ner/
+.ipynb_checkpoints/
+__pycache__
+.DS_Store
+testing_environment.ipynb
+test.py
