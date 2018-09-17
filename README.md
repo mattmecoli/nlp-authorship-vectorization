@@ -1,7 +1,10 @@
 # nlp-authorship-vectorization
 
 
-We utilized doc2vec and other NLP processing tools to explore whether we could classify authorship by sex, period, and author
+We utilized doc2vec and other NLP processing tools to explore whether we could classify authorship by sex, period, and author<br>
+
+
+There's definitely some refactoring that we'd like to do given the time (a lot of code copy and pasted that could be functionalized).<br>
 
 
 
