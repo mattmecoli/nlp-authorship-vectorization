@@ -81,21 +81,25 @@ Doc2Vec is absolutely fascinating. The paper introducing the 'paragraph vector' 
 
 Our Doc2Vec results are best shown instead of told. <br>
 
-We'll start with the final version (and a nice animation) to keep you intrigued and reading on as we explain what's going on. 
+We'll start with the final version (and a nice animation) to keep you intrigued and reading on as we explain.
 
 ![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/3d_display.gif)
 
 Pretty cool, huh? So here's what's going on. 
 
-In the gif, we've taken vectors for each text snippets inferred from a trained Doc2Vec model and then used Principal Component Analysis (PCA) to reduce the dimensonality (we were operating with 20 dimensional vectors for our purposes). The 3D plot here only demonstrates around 35-40% of explained variance, but the visualization and interpretability are well worth it. 
+To create the images in the gif, we first inferred vectors for each text snippets using a trained Doc2Vec model. Then, we used Principal Component Analysis (PCA) to reduce the dimensonality (we were operating with 20 dimensional vectors for our purposes). The remaining three dimensions only account for around 35-40% of explained variance, but the visualization and interpretability are well worth it. 
 
-![Image]( 
+Snippets were 'tagged' with an author, author's sex, and text's literary period. We suspected this would cause overfitting, so we used non-tagged vectors when we build our feed-forward neural net, but for the purposes of examining analogous relationships between snippets and the overall outcome of Doc2Vec, we tried both tagged and untagged. You can see an example of the snippet in question, along with its tags. We then infer its spot in vector space and get the cosine similarity for the 'tag' vectors, which can be thought of as the centroid points for each individual cluster of texts tagged with that term, be it 'female' or 'Victorian' or 'Jane Austen'. In this case, the inferred vector is in fact close to 'male' in the sex comparison, 'realism' in the period comparison, and 'Mark Twain' in the author comparison, which is fascinating. 
 
-![Image]( 
+![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/MarkTwain_InferredVector2.png)
 
-![Image]( 
+The tags in question can be seen a little more clearly in the following example. Note, not all of our inferred vectors were this accurate, nor were our 'untagged' vectors quite as accurate, but we still saw impressive results. We've explored ways to compare how 'accurate' an inferrence is and work is ongoing on that point. 
 
-![Image]( 
+![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/JackLondon_InferredVector_Strong.png)
+
+Finally, exploring the images themselves, as well as toggling some tags on and off, yields some interesting visualizations of the clusters involved. 
+
+![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/partial_author_pca.png)
 
 
 #### Machine Learning Models
@@ -107,45 +111,67 @@ We also built a ‘test_classifiers’ function that ran, tuned, and returned re
 <br>
 We trained a bagging model, Random Forest, and a boosting model, AdaBoost for author, author's sex, and literary period. We also trained a K-Nearest-Neighbors on author and period. <br>
 
-<b> Full Results </b>
+Our functions returned clear test/train accuracy results for each vectorization method we tried so we could clearly see which model hyperparameters (except in the case of Naive Bayes) tuned best and which vectorizations were proving most successful. 
+
+<b> Naive Bayes Results Example </b>
+![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/bernoulli_nb_results.png)
+
+<b> Random Forest Results Example </b> 
+![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/rf_author_results.png)
+
+<b> Full Table of Best Results Across Models </b>
 
 ![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/ml_results_table.png)
 
-
-# WORK IN PROGRESS BELOW THIS POINT
-
-
 #### Neural Nets 
-We built a feed-forward neural network models to make predictions.
-Results  
+We built a feed-forward neural network models to make predictions based upon sex only. Not only was a binary classification model simpler, but the lack of unique data points for each author or literary period made using a neural net for multi-class classification a bit like using a sledgehammer on a finishing nail. As such, our multi-layer perception (MLP) was used only for classification on sex (binary). If we were to expand our data set, we would utilize softmax and multi-class classfication methodology. 
 
-Regularizations 
+<b> Neural Net Architecture </b> 
+
+![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/MLP%20architecture.png)
+
+Utilizing relu activation and a sigmoid for classification, we found the following results. 
+
+![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/mlp.png)
+
+
+We also tried early stopping:
+
+![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/early_stopping.png)
+
+
+And Dropout, as well as L1 & L2 regularization: 
+
+![Image](https://github.com/mattymecks/nlp-authorship-vectorization/blob/master/images/dropout_l1_l2.png)
+
+
+The best thing we could do to improve the performance of our neural net is expand the size of our dataset, which is an aim for future iterations of this project. 
 
 ### Visualization 
 
-Reduced dimensionality using PCA in order to create 3D data visualization of vectors and improve interpretability
+Our primarily method of visualization was through reducing dimensionality using PCA in order to create 3D data visualization of vectors and improve interpretability, as well as in graphing results. 
 
 ### Conclusion 
 
-Good example of using the right tool for the job. The relatively simplistic NB performed far better than the more advanced neural net in this situation (given the relatively limited size of the data and the) 
+This project was an excellent example of knowing when to use the right tool for the job. There can be an urge after learning about the awesomeness of deep learning techniques to simply apply them to everything. But here, the relatively simplistic NB performed far better than the more advanced neural net, given the relatively limited size of the data and the penchanct of Naive Bayes model assumptions to fare well when dealing with linguistic data. 
+
+Additionally, to the extent that this project was an exploration of the viability of more complicated projects evolving more experimental areas of NLP, we've deemed both Doc2Vec level analogous reasoning and author style reproductions with RNNs worth exploring. 
 
 ## Next Steps
 
-There's definitely some refactoring that we'd like to do given the time (a lot of code copy and pasted that could be functionalized).<br>
+Increasing the size of the data set, and finding a way to access more modern books (which would also allow us to add a 'genre' tag to each text) is probably the primary next step. There's also some refactoring that we'd like to do given the time, particulaly with functionalizing repetitive code. And we'd like to test different methodologies and develop a way of keeping a very clear record to ensure we can compare results across both hyperparameters and "super-hyper parameters" like which vectorization method to use. <br>
 
-Expanding dataset
+One of our next steps would also be to build out pipelines for additional classifiers like XGBoost. 
 
-Testing more versions 
+And finally, an additional next step that we were in the process of implementing, but have not yet finished, is to use extra validation data from authors and texts the model had not seen before to test the level of overfitting and see if the models have truly "learned" anything about sex, period, or author style. 
 
- One of our next steps would have been to build our pipelines for additional classifiers like XGBoost. 
-An additional next step would have been to use extra validation data from authors the model had not seen before to test the level of overfitting 
 ## Deployment Notes
 
 If you want to deploy this project yourself, there a few installation steps you’ll need to follow to get things working.
 
-First install libraries. Everything listed under the libraries header is a pre-req. It’s not an exhaustive list because we left off common libraries like Pandas, so there’s a chance there’s a few other dependencies you’ll need. 
+First install libraries. Everything listed under the libraries header is a pre-req to completely explore the Juypter notebooks. It’s not an exhaustive list because we left off common libraries like Pandas, so there’s a chance there’s a few other dependencies you’ll need. 
 
-Next, and this is the only challenging part, you’ll notice an empty folder called “PlaceNERFilesHere.” The Stanford NER library, which you can find (with complete installation instructions here: TK) is sizable (180 MBs). In order to not break GitHub, we had to gitignore out this library. But, we recognized that this presented problems if someone wanted to use our project OOB. There are two TK notebooks that reference the Stanford NER library. We commented out our paths and added paths that point to the <i> PlaceNERFilesHere </i>.  
+Additionally, and this is the only challenging part, you’ll notice an empty folder called “PlaceNERFilesHere.” The Stanford NER library, which you can find (with complete installation instructions below) is sizable (180 MBs). In order to not break GitHub, we had to gitignore out this library. Furthermore, StanfordNER is licensed under the GNU GPL license, which is discussed further under the 'license' section, but presents some challenges. Because we recognized that this presented problems if someone wanted to use our project out-of-box, we've left code in to easily implement Polyglot or NLTK methods instead. There are two TK notebooks that reference the Stanford NER library. If you chose to use it yourself, make your you commented out our paths, and add paths that point to the <i> PlaceNERFilesHere </i> directory, where you should have placed your downloaded and unpacked StanfordNER files.  
 
 ## Additional Project Details
 
@@ -153,36 +179,45 @@ Next, and this is the only challenging part, you’ll notice an empty folder cal
 
 We used the following libaries to complete our project and owe our thanks to their authors! 
 
+
 <b>Gutenberg</b> <br>
 Awesome library for downloading texts directly from Project Gutenberg. Comes with great tools for stripping metadata and pulling by either author or book id. <br>
 https://pypi.org/project/Gutenberg/
 <br>
-<b>Gensim</b> <br>
 
+<b>Gensim</b> <br>
+Gensim is an incredibly library for a variety of NLP tasks, but perhaps its greatest application in our work was its out-of-box implemntation of word2vec and doc2vec. Highly, highly recommended. <br>
+https://radimrehurek.com/gensim/index.html
 <br>
+
 <b>NLTK</b> <br>
 One of the most versatile and oft-utilized of all natural language packages in Python, NLTK needs little in the way of introduction. Docs below. <br>
 https://www.nltk.org/data.html
 <br>
+
 <b>Polyglot</b> <br>
 Polyglot is a “is a natural language pipeline that supports massive multilingual applications.” It really is an incredibly powerful and accessible NLP library with tools in a multitude of languages. <br>
 Quick note that Polyglot requires the following to get up and running once installed (it’s in the docs but it can be a bit hard to find): <br>
-```
+
 %%bash
 polyglot download embeddings2.en pos2.en
-```
+
 https://pypi.org/project/polyglot/
 
-<br>
+
 <b>Stanford NER</b> <br>
-You can download the StanfordNER yourself at the link below as well as explore the documentation. I will mention again that StanfordNER is licensed under a GNU GPL license.  <br>
+You can download the StanfordNER yourself at the link below as well as explore the documentation. I will mention again that StanfordNER is licensed under a GNU GPL license. <br>
 https://nlp.stanford.edu/software/CRF-NER.shtml#Download
 
 
 ### Authors
+<b>Matt Mecoli</b> - [Linkedin](https://www.linkedin.com/in/mattmecoli/) ; [GitHub](https://github.com/mattymecks) ; [Medium](https://medium.com/@mattymecks)
 
-**Naoko Suga** Link, Description (particularly with NN and PCA) 
-**Matt Mecoli** Link, Description (particularly with ML, preprocessing, and Doc2Vec) 
+Matt is a recent graduate of the data science immersive at the Flatiron School. He is a self-proclaimed data nerd and science geek, and is always happy to talk about interesting data science and machine learning projects. He comes from a background in law, but thinks this is way cooler. 
+
+<b>Naoko Suga</b> - [Linkedin](https://www.linkedin.com/in/naoko-suga/) ; [GitHub](https://github.com/NaokoSuga) ; [Medium](https://medium.com/@ns2586)
+
+Naoko is also a recent graduate of the data science immersive at the Flatiron School. She has a background in physics research (Columbia University) and financial analysis.
 
 ### Helpful Resources
 
@@ -197,19 +232,19 @@ https://github.com/RaRe-Technologies/gensim/blob/develop/docs/notebooks/doc2vec-
 
 https://rare-technologies.com/doc2vec-tutorial/
 
-
+For help using the StanfordNER in your preferred language. 
 https://textminingonline.com/how-to-use-stanford-named-entity-recognizer-ner-in-python-nltk-and-other-programming-languages
 
 ### License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details TK EXCEPT for the language noted below: 
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details EXCEPT for the language noted below: 
 
-IMPORTANT LICENSING NOTE: Stanford NER is licensed under the GNU GPL. This means that if you intend to use this project and license it under a permissive license like MIT or Apache, you must leave out the Stanford NER, as we have here.  TK TK TK TK 
+IMPORTANT LICENSING NOTE: Stanford NER is licensed under the GNU GPL. This means that if you intend to use this project and license it under a permissive license like MIT or Apache, you must leave out the Stanford NER, as we have here. If you use the StanfordNER to build any part of your project, you *must* license it under the GNU GPL as well.
 
-If none of this made any sense to you, Matt wrote an article on understanding the law behind common open source licenses for data scientists that can help clear it up: LINK PENDING 
+If none of the above paragraph made any sense to you, Matt wrote an article on understanding the law behind common open source licenses for data scientists that can help clear it up: LINK PENDING. 
 
 
 ### Acknowledgments
 
-* The Flatiron School, particularly Forest Polchow and Jeff Katz, for their advice and support.
-Tomas Mikolov, et. al., for the word2vec and doc2vec tools and white papers, which were fascinating and inspiring in pursuing this project.  
+* The Flatiron School, particularly Forest Polchow and Jeff Katz, for their advice and support.<br>
+* Tomas Mikolov, et. al., for the word2vec and doc2vec tools and white papers, which were fascinating and inspiring in pursuing this project.  
